@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星辰塔制造业数字化解决方案 — 全链路 ERP × AI 智能引擎</title>
+<style>
+  :root{
+    --primary:#3b5bfd;
+    --primary-dark:#2740c8;
+    --primary-light:#eef1ff;
+    --accent:#0ea5a4;
+    --accent-light:#e6faf9;
+    --kld:#d946ef;
+    --kld-light:#fdf0ff;
+    --erp:#f59e0b;
+    --erp-light:#fff8ea;
+    --ink:#1e2433;
+    --ink-2:#4b5568;
+    --ink-3:#8a93a6;
+    --line:#e6e9f0;
+    --bg:#f6f8fc;
+    --card:#ffffff;
+    --ok:#16a34a;
+    --warn:#d97706;
+    --bad:#dc2626;
+    --radius:14px;
+    --shadow:0 2px 10px rgba(30,41,64,.06);
+    --shadow-lg:0 10px 30px rgba(30,41,64,.10);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;font-size:15px;
+  }
+  a{color:var(--primary);text-decoration:none;}
+
+  /* ============ 布局 ============ */
+  .layout{display:flex;max-width:1500px;margin:0 auto;}
+  aside.toc{
+    width:258px;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto;
+    background:#fff;border-right:1px solid var(--line);padding:28px 0 40px;
+  }
+  .toc-brand{padding:0 24px 18px;border-bottom:1px solid var(--line);margin-bottom:14px;}
+  .toc-brand .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;}
+  .toc-brand .logo .star{
+    width:34px;height:34px;border-radius:9px;
+    background:linear-gradient(135deg,var(--primary),#7c5cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;
+  }
+  .toc-brand small{display:block;color:var(--ink-3);font-size:12px;margin-top:6px;}
+  .toc a{
+    display:block;padding:7px 24px 7px 30px;color:var(--ink-2);font-size:13.5px;
+    border-left:3px solid transparent;transition:.15s;
+  }
+  .toc a:hover{color:var(--primary);background:var(--primary-light);}
+  .toc a.lv2{padding-left:46px;font-size:12.8px;color:var(--ink-3);}
+  .toc a.active{color:var(--primary);border-left-color:var(--primary);background:var(--primary-light);font-weight:600;}
+  main{flex:1;min-width:0;padding:0 48px 90px;}
+
+  /* ============ 章节通用 ============ */
+  section{padding-top:64px;}
+  .sec-no{
+    display:inline-flex;align-items:center;gap:8px;background:var(--primary-light);color:var(--primary-dark);
+    font-weight:700;font-size:12.5px;padding:4px 12px;border-radius:99px;letter-spacing:1px;margin-bottom:12px;
+  }
+  h2.sec-title{font-size:27px;font-weight:800;margin-bottom:6px;letter-spacing:.5px;}
+  .sec-desc{color:var(--ink-2);margin-bottom:26px;max-width:920px;}
+  h3{font-size:19px;font-weight:750;margin:34px 0 14px;display:flex;align-items:center;gap:9px;}
+  h3::before{content:"";width:5px;height:19px;border-radius:3px;background:var(--primary);}
+  h4{font-size:15.5px;font-weight:700;margin:20px 0 8px;}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px 26px;box-shadow:var(--shadow);}
+  .grid{display:grid;gap:16px;}
+  .g2{grid-template-columns:repeat(2,1fr);}
+  .g3{grid-template-columns:repeat(3,1fr);}
+  .g4{grid-template-columns:repeat(4,1fr);}
+  @media(max-width:1150px){.g4{grid-template-columns:repeat(2,1fr);}.g3{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:820px){.g2,.g3,.g4{grid-template-columns:1fr;}}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);}
+  .kpi .num{font-size:30px;font-weight:800;color:var(--primary);}
+  .kpi .lab{color:var(--ink-2);font-size:13px;margin-top:2px;}
+  .kpi .sub{color:var(--ink-3);font-size:12px;margin-top:4px;}
+
+  /* 徽章/标签 */
+  .tag{display:inline-block;font-size:12px;padding:2px 10px;border-radius:99px;background:var(--primary-light);color:var(--primary-dark);font-weight:600;margin:2px 3px 2px 0;}
+  .tag.g{background:#e8f8ef;color:#15803d;}
+  .tag.o{background:var(--erp-light);color:#b45309;}
+  .tag.p{background:var(--kld-light);color:#a21caf;}
+  .tag.t{background:var(--accent-light);color:#0f766e;}
+
+  /* 表格 */
+  table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;box-shadow:var(--shadow);font-size:13.8px;}
+  th{background:#f0f3fa;text-align:left;padding:11px 14px;font-weight:700;color:var(--ink-2);border-bottom:1px solid var(--line);white-space:nowrap;}
+  td{padding:10px 14px;border-bottom:1px solid #f0f2f7;vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:#fafbff;}
+  .table-wrap{overflow-x:auto;border-radius:10px;}
+
+  /* 流程图 */
+  .flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin:18px 0;}
+  .flow .step{
+    background:#fff;border:2px solid var(--primary-light);border-radius:10px;padding:10px 14px;
+    font-size:13px;font-weight:600;color:var(--primary-dark);position:relative;flex:1;min-width:86px;text-align:center;
+    display:flex;flex-direction:column;justify-content:center;box-shadow:var(--shadow);margin-right:26px;
+  }
+  .flow .step:last-child{margin-right:0;}
+  .flow .step small{font-weight:400;color:var(--ink-3);font-size:11px;margin-top:2px;}
+  .flow .step:not(:last-child)::after{
+    content:"➜";position:absolute;right:-23px;top:50%;transform:translateY(-50%);
+    color:var(--primary);font-size:15px;
+  }
+  .flow.kld .step{border-color:var(--kld-light);color:#a21caf;}
+  .flow.kld .step:not(:last-child)::after{color:var(--kld);}
+
+  /* 优缺点卡片 */
+  .pros,.cons,.scene{
+    border-radius:var(--radius);padding:20px 24px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow);
+  }
+  .pros{border-top:4px solid var(--ok);}
+  .cons{border-top:4px solid var(--warn);}
+  .scene{border-top:4px solid var(--primary);}
+  .pros h4,.cons h4,.scene h4{margin-top:0;display:flex;align-items:center;gap:8px;}
+  ul.clean{list-style:none;}
+  ul.clean li{padding:6px 0 6px 26px;position:relative;color:var(--ink-2);font-size:14px;}
+  ul.clean li::before{content:"✓";position:absolute;left:2px;color:var(--ok);font-weight:800;}
+  ul.clean.dot li::before{content:"•";color:var(--primary);font-size:18px;line-height:1.2;}
+  ul.clean.arrow li::before{content:"›";color:var(--primary);font-weight:800;font-size:16px;}
+  /* 警示卡片内的列表标记改为警示色，避免绿勾被读成正面项 */
+  .cons ul.clean li::before{content:"!";color:var(--warn);}
+
+  /* 聊天模拟框 */
+  .chat{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow-lg);max-width:820px;}
+  .chat .msg{display:flex;gap:12px;margin-bottom:16px;}
+  .chat .avatar{width:34px;height:34px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;}
+  .chat .user .avatar{background:var(--ink-3);}
+  .chat .bot .avatar{background:linear-gradient(135deg,var(--primary),#7c5cff);}
+  .chat .bubble{background:#f4f6fb;border-radius:4px 14px 14px 14px;padding:12px 16px;font-size:13.5px;color:var(--ink-2);}
+  .chat .user .bubble{background:var(--primary-light);border-radius:14px 4px 14px 14px;}
+  .chat .meta{font-size:11.5px;color:var(--ink-3);margin-top:8px;display:flex;gap:14px;flex-wrap:wrap;}
+  .chat code{background:#eef1f8;border-radius:5px;padding:1px 7px;font-size:12.5px;color:var(--primary-dark);}
+
+  /* 模块卡片 */
+  .mod{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);display:flex;gap:16px;}
+  .mod .ico{width:44px;height:44px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:21px;}
+  .mod h4{margin:0 0 6px;font-size:15.5px;}
+  .mod p{color:var(--ink-2);font-size:13.2px;}
+
+  /* Hero */
+  .hero{
+    margin-top:40px;border-radius:22px;padding:60px 56px;position:relative;overflow:hidden;
+    background:linear-gradient(120deg,#111c4e 0%,#2740c8 48%,#0ea5a4 100%);color:#fff;box-shadow:var(--shadow-lg);
+  }
+  .hero::after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,.08);}
+  .hero::before{content:"";position:absolute;right:60px;bottom:-160px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.06);}
+  .hero .badge{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);padding:4px 14px;border-radius:99px;font-size:12.5px;letter-spacing:2px;margin-bottom:20px;}
+  .hero h1{font-size:40px;font-weight:800;letter-spacing:1px;margin-bottom:14px;line-height:1.3;}
+  .hero .sub{font-size:17px;opacity:.92;max-width:780px;}
+  .hero .meta-row{display:flex;gap:26px;flex-wrap:wrap;margin-top:34px;font-size:13px;opacity:.85;}
+  .hero .meta-row b{display:block;font-size:15px;opacity:1;margin-bottom:1px;}
+
+  .foot{border-top:1px solid var(--line);margin-top:70px;padding-top:26px;color:var(--ink-3);font-size:12.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+
+  .note{
+    background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;font-size:13px;color:#92400e;margin:14px 0;
+  }
+  .note b{color:#78350f;}
+  .note.info{background:var(--accent-light);border-color:#a7e8e5;color:#0f5f5b;}
+  .note.info b{color:#0b4a47;}
+  .note.disc{background:#f4f6fb;border-color:var(--line);color:var(--ink-2);}
+  .note.disc b{color:var(--ink);}
+
+  .compare-yes{color:var(--ok);font-weight:700;}
+  .compare-no{color:#c8cede;font-weight:700;}
+
+  .anchor{padding-top:64px;margin-top:-64px;}
+
+  /* ============ 分场景方案块 ============ */
+  .sol{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+  .sol-head{
+    display:flex;align-items:center;gap:14px;padding:18px 24px;border-bottom:1px solid var(--line);
+    background:linear-gradient(90deg,#f4f7ff,#fff);
+  }
+  .sol-head .no{
+    width:34px;height:34px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    background:var(--primary);color:#fff;font-weight:800;font-size:15px;
+  }
+  .sol-head h4{margin:0;font-size:17px;font-weight:750;}
+  .sol-head p{margin:2px 0 0;font-size:12.5px;color:var(--ink-3);}
+  .sol-body{padding:20px 24px;}
+  .tri{display:grid;grid-template-columns:repeat(3,1fr);gap:0;}
+  .tri > div{padding:0 18px;border-left:1px solid var(--line);}
+  .tri > div:first-child{padding-left:0;border-left:none;}
+  .tri > div:last-child{padding-right:0;}
+  .tri h5{font-size:13px;font-weight:700;color:var(--ink-3);letter-spacing:.5px;margin-bottom:8px;}
+  .tri p{font-size:13.4px;color:var(--ink-2);}
+  @media(max-width:900px){.tri{grid-template-columns:1fr;}.tri > div{padding:14px 0;border-left:none;border-top:1px solid var(--line);}}
+
+  /* ============ 单色量值条（magnitude） ============ */
+  .bars{margin:6px 0 0;}
+  .bar-row{display:grid;grid-template-columns:150px 1fr 74px;align-items:center;gap:12px;padding:7px 0;}
+  .bar-row .bl{font-size:13.2px;color:var(--ink-2);text-align:right;}
+  .bar-row .bt{background:#eef1f8;border-radius:6px;height:20px;position:relative;overflow:hidden;}
+  .bar-row .bf{height:100%;border-radius:6px;background:var(--primary);}
+  .bar-row .bf.alt{background:var(--accent);}
+  .bar-row .bv{font-size:13px;font-weight:700;color:var(--ink);text-align:left;}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2);margin:4px 0 14px;}
+  .legend span{display:flex;align-items:center;gap:6px;}
+  .legend i{width:11px;height:11px;border-radius:3px;display:inline-block;}
+  @media(max-width:700px){.bar-row{grid-template-columns:110px 1fr 64px;}}
+
+  /* 阶段卡 */
+  .phase{border:1px solid var(--line);border-radius:var(--radius);background:#fff;box-shadow:var(--shadow);padding:0;overflow:hidden;}
+  .phase .ph-top{padding:16px 22px;border-bottom:1px solid var(--line);}
+  .phase .ph-top .ptag{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 10px;border-radius:99px;background:var(--primary-light);color:var(--primary-dark);margin-bottom:8px;}
+  .phase .ph-top h4{margin:0;font-size:16px;}
+  .phase .ph-top .dur{color:var(--ink-3);font-size:12.5px;margin-top:2px;}
+  .phase .ph-body{padding:16px 22px;}
+  .phase .ph-body .out{font-size:12px;color:var(--ink-3);margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);}
+
+  @media(max-width:900px){
+    aside.toc{display:none;}
+    main{padding:0 20px 60px;}
+    .hero{padding:36px 26px;}
+    .hero h1{font-size:27px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- ================= 侧边目录 ================= -->
+<aside class="toc" id="toc">
+  <div class="toc-brand">
+    <div class="logo"><span class="star">★</span>星辰塔</div>
+    <small>制造业解决方案 · 2026-10</small>
+  </div>
+  <a href="#sec0">00 · 方案摘要</a>
+  <a href="#sec1">01 · 行业洞察</a>
+  <a href="#sec1-1" class="lv2">1.1 三大趋势</a>
+  <a href="#sec1-2" class="lv2">1.2 六类共性难题</a>
+  <a href="#sec2">02 · 痛点地图</a>
+  <a href="#sec3">03 · 总体架构</a>
+  <a href="#sec3-1" class="lv2">3.1 五层架构</a>
+  <a href="#sec3-2" class="lv2">3.2 两套应用定位</a>
+  <a href="#sec4">04 · 全链路业务蓝图</a>
+  <a href="#sec5">05 · 分场景能力方案</a>
+  <a href="#sec5-1" class="lv2">5.1 销售与接单</a>
+  <a href="#sec5-2" class="lv2">5.2 计划与物料需求</a>
+  <a href="#sec5-3" class="lv2">5.3 采购与供应商协同</a>
+  <a href="#sec5-4" class="lv2">5.4 生产执行与车间报工</a>
+  <a href="#sec5-5" class="lv2">5.5 仓储与物流</a>
+  <a href="#sec5-6" class="lv2">5.6 质量管控</a>
+  <a href="#sec5-7" class="lv2">5.7 委外与客供料</a>
+  <a href="#sec5-8" class="lv2">5.8 成本与财务衔接</a>
+  <a href="#sec5-9" class="lv2">5.9 集团多组织管控</a>
+  <a href="#sec6">06 · 细分行业方案</a>
+  <a href="#sec7">07 · AI 赋能制造</a>
+  <a href="#sec8">08 · 实施路线图</a>
+  <a href="#sec9">09 · 选型与配置建议</a>
+  <a href="#sec10">10 · 价值与收益</a>
+  <a href="#sec11">11 · 服务与保障</a>
+  <a href="#sec12">12 · 附录</a>
+</aside>
+
+<main>
+
+<!-- ================= HERO ================= -->
+<section id="sec0" style="padding-top:40px;">
+  <div class="hero">
+    <div class="badge">MANUFACTURING SOLUTION · 2026</div>
+    <h1>星辰塔制造业数字化解决方案</h1>
+    <div class="sub">面向离散制造企业的<b>全链路 ERP × AI 智能引擎</b>：以「销售接单 → 物料运算 → 采购协同 → 生产执行 → 车间报工 → 仓储品质 → 财务核算」为主线，用<b>单据化流程 + 事件驱动工作流 + AI 原生交互</b>，把工厂里靠经验、靠 Excel、靠口头传递的环节，变成可查、可溯、可算的数字链路。</div>
+    <div class="meta-row">
+      <div><b>方案底座</b>星辰塔 AI 原生应用平台</div>
+      <div><b>应用组合</b>ERP 应用（起步版）+ 恺乐迪（全链路版）</div>
+      <div><b>主线覆盖</b>12 个业务环节全程单据化</div>
+      <div><b>方案版本</b>2026-10 · V1.0</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:44px;">方案摘要</h3>
+  <div class="grid g3">
+    <div class="card">
+      <h4 style="margin-top:0;">🎯 面向谁</h4>
+      <p style="color:var(--ink-2);font-size:13.5px;">以<b>离散制造</b>为主体的中小与中大型企业：五金机加、塑胶注塑、电子电器装配、非标定制、来料加工代工（CMO）等「多品种、小批量、按单生产」业态。典型规模为年产值千万级至十亿级、有独立生产与仓储职能的制造企业及其集团。</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0;">🧩 解决什么</h4>
+      <p style="color:var(--ink-2);font-size:13.5px;">四件事：<b>订单接得住</b>（报价—订单—变更闭环）、<b>物料算得清</b>（MRP 齐套分析）、<b>现场看得见</b>（工单—报工—进度）、<b>账目对得上</b>（收发存与成本的凭证链）。外加一件：<b>系统用得动</b>——AI 自然语言入口，让不熟悉系统的车间与仓管也能用起来。</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0;">🏗 怎么落地</h4>
+      <p style="color:var(--ink-2);font-size:13.5px;">三阶段推进：<b>试点上线</b>（主数据 + 订单—采购—库存闭环）→ <b>深化贯通</b>（MRP、车间报工、质量、委外）→ <b>智能升级</b>（AI 问数、工作流自动化、集团汇总）。平台低代码特性使流程调整当天改、当天上线。</p>
+    </div>
+  </div>
+
+  <div class="note info" style="margin-top:20px;">
+    <b>一句话价值：</b>星辰塔把「一套要实施半年、还要大量二次开发的 ERP」，变成<b>两套开箱可用、可自行裁剪、且自带 AI 入口的制造 ERP 实例</b>——企业不必先接受一套僵化流程，而是先跑通业务、再按自己的工艺与组织去长。
+  </div>
+
+  <div class="note disc">
+    <b>关于本文数据口径：</b>文中标注「实测」的功能、模块数量、单据编号、工作流名称等内容，来自产品方在 <code>ai.agenmeta.com</code> 测试环境的功能遍历记录，用于说明<b>系统实际具备的能力边界</b>。文中标注「参考区间 / 目标值」的收益类数字为行业经验参考与项目目标，<b>非实测结果，亦不构成效果承诺</b>，实际收益取决于企业管理基础、执行力度与实施范围。
+  </div>
+</section>
+
+<!-- ================= 01 行业洞察 ================= -->
+<section id="sec1">
+  <div class="anchor" id="sec1"></div>
+  <span class="sec-no">CHAPTER 01</span>
+  <h2 class="sec-title">行业洞察：制造业正在被三件事重塑</h2>
+  <p class="sec-desc">在谈方案之前，先对齐制造业当前真实的经营环境变化——这决定了 ERP 要解决的问题已经不是「记好账」。</p>
+
+  <div class="anchor" id="sec1-1"></div>
+  <h3>1.1 三大趋势</h3>
+  <div class="grid g3">
+    <div class="scene">
+      <h4>① 从规模制造 → 柔性快反</h4>
+      <p style="color:var(--ink-2);font-size:13.6px;margin-top:6px;">订单碎片化、批次变小、交期被持续压缩，客户随时改单改量。<b>「一套流程走天下」的刚性系统，跟不上「一单一个样」的生产节奏。</b>企业需要能快速长出新单据、新流程、新审批的柔性系统。</p>
+    </div>
+    <div class="scene">
+      <h4>② 从系统记录 → 数据驱动</h4>
+      <p style="color:var(--ink-2);font-size:13.6px;margin-top:6px;">ERP 不再只是事后记账的台账，而要向前驱动：<b>先算料再排产、先齐套再开工、先比价再下单</b>。系统若不能参与决策，数据录进去也只是另一种 Excel。</p>
+    </div>
+    <div class="scene">
+      <h4>③ 从人找数据 → AI 找人</h4>
+      <p style="color:var(--ink-2);font-size:13.6px;margin-top:6px;">制造企业信息化的最大阻力从来不是功能不够，而是<b>一线不愿录、管理层不会查</b>。自然语言交互把门槛降到「说一句话」，是让系统真正被用起来的关键变量。</p>
+    </div>
+  </div>
+
+  <div class="anchor" id="sec1-2"></div>
+  <h3>1.2 六类共性难题</h3>
+  <p class="sec-desc" style="margin-bottom:16px;">以下六类问题在离散制造企业中高度重复出现，也是本方案逐条对位的靶心。</p>
+  <div class="table-wrap">
+  <table>
+    <tr><th style="width:60px;">序号</th><th style="width:190px;">难题</th><th>在工厂里的真实样子</th><th style="width:230px;">造成的经营损失</th></tr>
+    <tr><td><b>①</b></td><td><b>ERP 买得起、用不起</b></td><td>传统 ERP 实施周期以年计，一动流程就要二开，费用与工期不可控；中小企业干脆放弃，继续用 Excel</td><td>数字化长期停在起跑线，管理全靠人</td></tr>
+    <tr><td><b>②</b></td><td><b>Excel 满天飞、口径打架</b></td><td>订单在业务电脑、BOM 在工程师电脑、库存靠仓管脑子；同一批货三个版本，会议先对数再议事</td><td>数据滞后、决策依据失真</td></tr>
+    <tr><td><b>③</b></td><td><b>单据流转靠人肉通知</b></td><td>订单确认后要人工打电话催评审、催采购、催仓库；漏单、错单、重复下单屡见不鲜</td><td>交期失控、客户投诉、返工成本</td></tr>
+    <tr><td><b>④</b></td><td><b>物料算不清、齐套没感知</b></td><td>排产凭老师傅经验，开工当天才发现缺一颗螺丝，整条线停工待料</td><td>停工损失、加班赶工、交期违约</td></tr>
+    <tr><td><b>⑤</b></td><td><b>车间是黑盒</b></td><td>进度靠班后口头汇报，产量与工时对不上账；出了问题无法定位到工序与人</td><td>绩效算不准、异常发现晚</td></tr>
+    <tr><td><b>⑥</b></td><td><b>系统割裂、数据成岛</b></td><td>组织在企业微信、单据在 Excel、审批在微信群，多套账号多份密码，谁也没法全局看</td><td>管理成本高、透明度低</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ================= 02 痛点地图 ================= -->
+<section id="sec2">
+  <div class="anchor" id="sec2"></div>
+  <span class="sec-no">CHAPTER 02</span>
+  <h2 class="sec-title">痛点地图：逐环节对位解法</h2>
+  <p class="sec-desc">把制造业的价值链拆成九个环节，逐个说明「痛点是什么 → 用什么能力应对 → 由哪个应用承载」。右侧「承载能力」均对应产品实测存在的模块。</p>
+
+  <div class="table-wrap">
+  <table>
+    <tr><th style="width:120px;">业务环节</th><th style="width:24%;">典型痛点</th><th style="width:30%;">星辰塔解法</th><th>承载能力（实测模块）</th></tr>
+    <tr>
+      <td><b>① 销售接单</b></td>
+      <td>报价无版本、改单无留痕、交期拍脑袋承诺，异常订单口头处理</td>
+      <td>报价—订单—发货—退货全链条单据化；订单状态分视图一键筛选；变更与取消走独立「异常处理单」，责任可追溯</td>
+      <td><span class="tag">报价管理(4)</span><span class="tag">销售订单</span><span class="tag">订单异常处理单</span><span class="tag">送货管理(3)</span><span class="tag">退货管理(2)</span><span class="tag">客户/联系人</span></td>
+    </tr>
+    <tr>
+      <td><b>② 计划排产</b></td>
+      <td>接单前不知道能不能做、要多少料；排产靠经验，齐套风险事后暴露</td>
+      <td>接单即跑 <b>MRP 物料分析</b>，按 BOM 展开净需求；物料需求明细到行、汇总到料，缺料清单直达请购</td>
+      <td><span class="tag p">评审(MRP分析)</span><span class="tag p">物料需求明细/汇总</span><span class="tag p">生产工单</span><span class="tag p">生产领料计划(3)</span><span class="tag p">生产计划与物控(9)</span></td>
+    </tr>
+    <tr>
+      <td><b>③ 采购供应</b></td>
+      <td>请购靠口头、比价凭印象，同一物料不同采购价，供应商报价无沉淀</td>
+      <td>需求 → 请购 → 采购三段式分离：生产/仓库提请购，采购部统一比价转单；<b>供应商价格库</b>沉淀历史报价，比价有据</td>
+      <td><span class="tag p">采购需求(成品/材料)</span><span class="tag p">请购单</span><span class="tag p">请购转采购</span><span class="tag p">供应商/价格管理</span><span class="tag">采购订单</span></td>
+    </tr>
+    <tr>
+      <td><b>④ 生产现场</b></td>
+      <td>进度黑盒、报工靠纸质、工时产量对不上，异常发现晚</td>
+      <td>四级工艺建模（工序→工艺路线→工序列表→小工序）支撑工序级派工与报工；产量工时实时回传生产情况台账，报工到人</td>
+      <td><span class="tag p">车间报工(4)</span><span class="tag p">部门/作业员</span><span class="tag">车间管理(19)</span><span class="tag">工艺维护(4)</span><span class="tag p">生产情况</span></td>
+    </tr>
+    <tr>
+      <td><b>⑤ 仓储物流</b></td>
+      <td>账实不符、收发无凭据、成品与原材混管，盘点靠翻账本</td>
+      <td>收货四通道（采购/委外/客供）分流管理；成品与原材双库存视角；出入库流水统计自动汇总，账实可对</td>
+      <td><span class="tag p">采购/委外收货(2)</span><span class="tag p">客供收货</span><span class="tag p">成品与原材库存</span><span class="tag p">生产领料(4)</span><span class="tag p">成品变动出库(3)</span><span class="tag">流水统计</span></td>
+    </tr>
+    <tr>
+      <td><b>⑥ 质量管理</b></td>
+      <td>来料不检、制程失控、成品带病出厂，不良品流向追溯不到批次</td>
+      <td>IQC / IPQC / FQC 检验单据体系，检验结果联动入库判定；不良品走退货或返工通道，委外品质同样纳管</td>
+      <td><span class="tag">质量管理(10)</span><span class="tag">质检基础(3)</span><span class="tag p">采购/委外退货</span></td>
+    </tr>
+    <tr>
+      <td><b>⑦ 委外加工</b></td>
+      <td>外协厂进度靠催、发料收货对不上、外协成本算不清</td>
+      <td>委外订单下达与外协收退货联动仓库，与普通采购分流；委外收货即检验，外协品质与账目同管</td>
+      <td><span class="tag">委外管理(12)</span><span class="tag p">委外收货/退货</span></td>
+    </tr>
+    <tr>
+      <td><b>⑧ 成本核算</b></td>
+      <td>成本月底才结、数据靠补，料工费摊不清，报价缺依据</td>
+      <td>工单领料、报工工时、采购价格三类数据源头采集，形成可核算的成本凭证链；财务模块承接业务单据</td>
+      <td><span class="tag p">财务管理(2)</span><span class="tag p">生产领料计划</span><span class="tag p">供应商价格库</span><span class="tag">产品BOM</span></td>
+    </tr>
+    <tr>
+      <td><b>⑨ 管理决策</b></td>
+      <td>要看个数得等报表，想看进度得开例会，全靠拍脑袋</td>
+      <td>AI 助手自然语言问数，自动澄清口径后直接给结果；数据总览与应用活跃数据提供企业级视图；异常自动推送</td>
+      <td><span class="tag t">AI 助手</span><span class="tag t">数据总览</span><span class="tag t">应用活跃数据</span><span class="tag t">消息中心/审批中心</span></td>
+    </tr>
+  </table>
+  </div>
+
+  <div class="note">
+    <b>读法提示：</b>上表并非「买一套系统就能自动实现」。每一行解法的前提是<b>主数据先立起来</b>（物料、BOM、工艺、供应商、客户），以及<b>现场愿意按规范录单</b>。方案第 8 章的实施路线图就是围绕这两个前提设计的。
+  </div>
+</section>
+
+<!-- ================= 03 总体架构 ================= -->
+<section id="sec3">
+  <div class="anchor" id="sec3"></div>
+  <span class="sec-no">CHAPTER 03</span>
+  <h2 class="sec-title">解决方案总体架构</h2>
+  <p class="sec-desc">本方案不是单一软件，而是「平台 + 应用 + 智能体 + 数据」的四件套组合。</p>
+
+  <div class="anchor" id="sec3-1"></div>
+  <h3>3.1 五层架构</h3>
+  <div class="card">
+    <div class="flow">
+      <div class="step">现场终端层<small>网页 / PC 客户端 / 手机 APP / 企业微信</small></div>
+      <div class="step">业务应用层<small>ERP 应用 / 恺乐迪 · 表格 + 工作流引擎</small></div>
+      <div class="step">智能体层<small>AI 助手 · 模型配置 · 知识库 · 任务计划</small></div>
+      <div class="step">平台支撑层<small>组织权限 · 应用管理 · 审批消息 · Token 计量</small></div>
+      <div class="step">数据层<small>数据共享 · 数据总览 · 数据迁移</small></div>
+    </div>
+    <ul class="clean arrow">
+      <li><b>现场终端层</b>——车间用手机 APP 报工、仓管用 APP 扫码收发货、业务在网页或企微处理订单、管理层在 PC 客户端看数，多端同一份数据；</li>
+      <li><b>业务应用层</b>——方案的业务主体，两套制造 ERP 实例承载全部单据与流程，均为「表格视图 + 状态筛选 + 工作流」形态，可按企业工艺自行裁剪重组；</li>
+      <li><b>智能体层</b>——AI 助手作为统一交互入口，支持自然语言查数、建表、截图识单；企业知识库承载制度与工艺文档；任务计划执行定时汇总；</li>
+      <li><b>平台支撑层</b>——集团 / 部门 / 成员三层组织模型，角色权限与数据隔离，审批中心与消息中心，以及 AI 能力的 Token 计量计费；</li>
+      <li><b>数据层</b>——跨应用数据共享避免重复录入，数据总览提供企业级资产视图，数据迁移工具承接历史系统数据入场。</li>
+    </ul>
+  </div>
+
+  <div class="anchor" id="sec3-2"></div>
+  <h3>3.2 两套应用的定位与取舍</h3>
+  <div class="grid g2">
+    <div class="card" style="border-top:4px solid var(--erp);">
+      <h4 style="margin-top:0;"><span style="display:inline-block;width:11px;height:11px;border-radius:3px;background:var(--erp);margin-right:8px;vertical-align:1px;"></span>ERP 应用 · 起步版</h4>
+      <p style="color:var(--ink-2);font-size:13.6px;">以「款号 / 物料」为中心的精简制造 ERP，约 13 个模块组，覆盖产品主数据（PML）、销售、采购、生产计划、车间、仓库、质量、委外、任务管理。菜单精简、上手成本低，<b>适合作为企业数字化的起步方案或标准化模板</b>，后续在低代码平台上按需扩展。</p>
+      <div style="margin-top:8px;"><span class="tag o">轻量上线</span><span class="tag o">模板化</span><span class="tag o">可裁剪扩展</span></div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--kld);">
+      <h4 style="margin-top:0;"><span style="display:inline-block;width:11px;height:11px;border-radius:3px;background:var(--kld);margin-right:8px;vertical-align:1px;"></span>恺乐迪 · 全链路版</h4>
+      <p style="color:var(--ink-2);font-size:13.6px;">在起步版基础上补齐<b>客户管理、MRP 物料运算、请购转采购、供应商价格库、车间报工、客供料收货、财务管理、部门与作业员管理</b>，形成「接单→评审→算料→请购→采购→收货→工单→报工→入库→发货→核算」的完整数字化工厂，<b>适合作为离散制造企业的主力生产系统</b>。</p>
+      <div style="margin-top:8px;"><span class="tag p">全链路</span><span class="tag p">MRP 运算</span><span class="tag p">车间报工</span><span class="tag p">客供料</span><span class="tag p">财务衔接</span></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <h4 style="margin-top:0;">📐 全链路环节覆盖对比（依据实测模块清单）</h4>
+    <div class="legend">
+      <span><i style="background:#3b5bfd;"></i>ERP 应用（起步版）</span>
+      <span><i style="background:#0ea5a4;"></i>恺乐迪（全链路版）</span>
+    </div>
+    <div class="bars">
+      <div class="bar-row"><div class="bl">销售 / 接单</div><div class="bt"><div class="bf" style="width:84%"></div></div><div class="bv">两者均具备</div></div>
+      <div class="bar-row"><div class="bl">产品主数据 PML</div><div class="bt"><div class="bf" style="width:84%"></div></div><div class="bv">两者均具备</div></div>
+      <div class="bar-row"><div class="bl">采购与收货</div><div class="bt"><div class="bf" style="width:78%"></div></div><div class="bv">起步版基础</div></div>
+      <div class="bar-row"><div class="bl">客户主数据</div><div class="bt"><div class="bf alt" style="width:100%"></div></div><div class="bv">仅恺乐迪</div></div>
+      <div class="bar-row"><div class="bl">MRP 物料运算</div><div class="bt"><div class="bf alt" style="width:100%"></div></div><div class="bv">仅恺乐迪</div></div>
+      <div class="bar-row"><div class="bl">请购转采购</div><div class="bt"><div class="bf alt" style="width:100%"></div></div><div class="bv">仅恺乐迪</div></div>
+      <div class="bar-row"><div class="bl">供应商价格库</div><div class="bt"><div class="bf alt" style="width:100%"></div></div><div class="bv">仅恺乐迪</div></div>
+      <div class="bar-row"><div class="bl">车间报工</div><div class="bt"><div class="bf alt" style="width:100%"></div></div><div class="bv">仅恺乐迪</div></div>
+      <div class="bar-row"><div class="bl">客供料收货</div><div class="bt"><div class="bf alt" style="width:100%"></div></div><div class="bv">仅恺乐迪</div></div>
+      <div class="bar-row"><div class="bl">财务管理</div><div class="bt"><div class="bf alt" style="width:100%"></div></div><div class="bv">仅恺乐迪</div></div>
+    </div>
+    <p style="color:var(--ink-3);font-size:12.5px;margin-top:10px;">条形长度为<b>相对能力示意</b>，依据两应用实测菜单模块的有无与深度绘制，非量化测评分数。完整逐项对比见第 9 章。</p>
+  </div>
+</section>
+
+<!-- ================= 04 蓝图 ================= -->
+<section id="sec4">
+  <div class="anchor" id="sec4"></div>
+  <span class="sec-no">CHAPTER 04</span>
+  <h2 class="sec-title">全链路业务蓝图</h2>
+  <p class="sec-desc">制造企业从接到一张订单，到钱货两清，本方案的全链路 12 环节。每个环节都有独立单据与状态，环节之间由工作流引擎自动驱动。</p>
+
+  <div class="card">
+    <div class="flow kld">
+      <div class="step">报价<small>报价管理</small></div>
+      <div class="step">销售订单<small>客户确认下单</small></div>
+      <div class="step">生产评审<small>MRP 分析</small></div>
+      <div class="step">物料需求<small>明细 / 汇总</small></div>
+      <div class="step">请购单<small>请购转采购</small></div>
+      <div class="step">采购订单<small>供应商价格库</small></div>
+      <div class="step">收货入库<small>采购/委外/客供</small></div>
+      <div class="step">生产工单<small>领料计划</small></div>
+      <div class="step">车间报工<small>工序产量工时</small></div>
+      <div class="step">成品入库<small>质检合格</small></div>
+      <div class="step">销售发货<small>支持部分发货</small></div>
+      <div class="step">财务核算<small>业务单据衔接</small></div>
+    </div>
+    <ul class="clean">
+      <li><b>环环有单据</b>——12 个环节不存在「口头传递」的黑洞，每个节点都有独立单据类型与状态字段；</li>
+      <li><b>环节间自动流转</b>——工作流引擎按「新增记录 / 修改记录 / 前置工作流完成」三类触发时机自动驱动下游动作；</li>
+      <li><b>异常可回退可追溯</b>——订单变更走异常处理单、发货支持部分发货、工作流失败实时推送并可一键重新执行；</li>
+      <li><b>闭环回到成本</b>——工单领料、报工工时、采购价格三类数据在链路上自然沉淀，构成成本核算的原始依据。</li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <h4 style="margin-top:0;">⚙️ 事件驱动工作流：实测还原</h4>
+    <p style="color:var(--ink-2);font-size:13.6px;">以下为产品方在测试环境中抓取到的真实工作流执行记录，展示了「新增 / 修改 / 前置完成」三类触发时机如何构成自动化引擎：</p>
+    <div class="table-wrap" style="margin-top:12px;">
+    <table>
+      <tr><th>工作流</th><th>触发时机</th><th>作用对象</th><th>制造业含义</th></tr>
+      <tr><td>销售确认下单审核</td><td>新增记录时</td><td>销售订单</td><td>业务录单即自动送审，无需人工催办（实测单号 XSDH000199 / XSDH000023）</td></tr>
+      <tr><td>销售发货 / 部分发货</td><td>修改记录时</td><td>销售订单</td><td>订单状态一变即触发发货流程，支持分批交货的常见制造场景</td></tr>
+      <tr><td>物料审核工作流</td><td>新增记录时</td><td>款号 / 物料</td><td>新增物料自动进入审核，防止未定价料被领用（实测 bh015122~124）</td></tr>
+      <tr><td>创建物料仓库</td><td>前置工作流完成时</td><td>款号 / 物料</td><td>物料审核通过后自动建立仓储台账，免去手工开卡</td></tr>
+      <tr><td>采购单审核</td><td>新增记录时</td><td>采购订单</td><td>采购下单即送审，价格与数量受控（实测单号 CGDH000013）</td></tr>
+    </table>
+    </div>
+    <p style="color:var(--ink-3);font-size:12.8px;margin-top:10px;">失败结果同样如实推送（实测中出现过「状态不在允许的选项内」的失败提示），可定位、可重试——这一点对制造业尤其重要：<b>自动化流程必须允许失败被看见，才敢把关键环节交给它。</b></p>
+  </div>
+</section>
+
+<!-- ================= 05 分场景方案 ================= -->
+<section id="sec5">
+  <div class="anchor" id="sec5"></div>
+  <span class="sec-no">CHAPTER 05</span>
+  <h2 class="sec-title">分场景能力方案</h2>
+  <p class="sec-desc">按制造业九个关键场景展开，每个场景统一按「业务痛点 → 方案能力 → 落地价值」三段式说明。能力项均对应产品实测模块。</p>
+
+  <!-- 5.1 -->
+  <div class="anchor" id="sec5-1"></div>
+  <h3>5.1 销售与接单管理</h3>
+  <div class="sol">
+    <div class="sol-head"><div class="no">01</div><div><h4>把「接单」从经验判断变成有据可依</h4><p>对应模块：客户管理 · 报价管理(4) · 销售订单 · 订单异常处理单 · 送货管理(3) · 退货管理(2)</p></div></div>
+    <div class="sol-body">
+      <div class="tri">
+        <div><h5>业务痛点</h5><p>报价靠 Excel 各自保存，客户改单只在微信里说一声；交期承诺凭感觉，接了单才发现做不出来；退货与扣款无台账，年底对账扯不清。</p></div>
+        <div><h5>方案能力</h5><p>客户与联系人独立主数据；报价管理四件套沉淀历史报价；销售订单单据自动编号、明细行级管理；订单状态按「已完结 / 待确认下单 / 一般销售单 / 备料订单 / 直销订单」分视图一键筛选；变更取消走独立异常处理单；出货标签直连发货环节。</p></div>
+        <div><h5>落地价值</h5><p>每一笔承诺都有单据留痕，改单责任可追溯到人；不同业务类型（含备料、直销）在同屏分流，业务文员不用在多个表格间切换；退货有闭环，售后账目清楚。</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5.2 -->
+  <div class="anchor" id="sec5-2"></div>
+  <h3>5.2 计划与物料需求（MRP）</h3>
+  <div class="sol">
+    <div class="sol-head"><div class="no">02</div><div><h4>先算料，再排产——把齐套风险提前暴露</h4><p>对应模块：生产评审(MRP 分析) · 物料需求明细/汇总 · 生产工单 · 生产领料计划(3) · 生产计划与物控(9)</p></div></div>
+    <div class="sol-body">
+      <div class="tri">
+        <div><h5>业务痛点</h5><p>排产全靠老师傅经验，开工当天才发现缺料，整条线停工待料；物料需求靠翻 BOM 手工算，算错一个数就多买或漏买。</p></div>
+        <div><h5>方案能力</h5><p>接单阶段即可执行「评审(MRP 分析)」，按产品 BOM 自动展开物料净需求；物料需求<b>明细到行、汇总到料</b>，缺料清单直接流向请购环节；生产工单承接排产结果并关联工艺路线；生产领料计划按工单备料，配合物控 9 项子功能做台账式管控。</p></div>
+        <div><h5>落地价值</h5><p>接单前就能回答「这笔订单能不能按期做」；开工前完成齐套校验，把停工待料从常态变成例外；物料需求自动汇总，计划员从「算料」转向「决策」。</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5.3 -->
+  <div class="anchor" id="sec5-3"></div>
+  <h3>5.3 采购与供应商协同</h3>
+  <div class="sol">
+    <div class="sol-head"><div class="no">03</div><div><h4>需求、请购、采购三段分离，比价有据</h4><p>对应模块：采购需求（成品/材料） · 请购单 · 请购转采购操作 · 请购汇总表 · 供应商与价格管理 · 采购订单</p></div></div>
+    <div class="sol-body">
+      <div class="tri">
+        <div><h5>业务痛点</h5><p>车间要料直接找采购口头下单，没有请购凭据；同一物料不同供应商报价散落在各人手里，比价全凭记忆；采购价与历史价脱节，成本失控无从察觉。</p></div>
+        <div><h5>方案能力</h5><p>需求 → 请购 → 采购三段式流程：生产与仓库按需提请购，<b>请购转采购操作</b>由采购部统一执行；请购汇总表归口全局需求；供应商主数据配套<b>采购价格明细与采购报价记录</b>，历史报价沉淀成价格库；采购订单新增即触发「采购单审核」工作流。</p></div>
+        <div><h5>落地价值</h5><p>权责清晰——提请购的人不管下单，下单的人有价格依据；同一物料的历史成交价随时可查，谈价不再是凭感觉；采购价格数据自然沉淀为后续报价与成本核算的输入。</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5.4 -->
+  <div class="anchor" id="sec5-4"></div>
+  <h3>5.4 生产执行与车间报工</h3>
+  <div class="sol">
+    <div class="sol-head"><div class="no">04</div><div><h4>把车间从黑盒变成透明产线</h4><p>对应模块：车间管理(19) · 车间报工(4) · 部门/作业员 · 工艺维护（工序→工艺路线→工序列表→小工序） · 生产情况</p></div></div>
+    <div class="sol-body">
+      <div class="tri">
+        <div><h5>业务痛点</h5><p>进度靠班后口头汇报，管理层当天看不到真实产能；产量与工时对不上，绩效发不准；出质量问题时，无法定位到具体工序与作业员。</p></div>
+        <div><h5>方案能力</h5><p>PML 中维护<b>四级工艺模型</b>（工序 → 工艺路线 → 工序列表 → 小工序），工艺颗粒度可细到小工序；工单按工艺路线派工；车间报工按工序上报产量与工时，实时回传生产情况台账；「部门管理 → 部门 / 作业员」把人力主数据做到个人粒度，报工到人。</p></div>
+        <div><h5>落地价值</h5><p>生产进度从「班组会后才知道」变成「随时可查」；工时与产量数据沉淀下来，计件与绩效有了客观依据；配合手机 APP，报工在工位现场完成，不必回办公室补录。</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5.5 -->
+  <div class="anchor" id="sec5-5"></div>
+  <h3>5.5 仓储与物流</h3>
+  <div class="sol">
+    <div class="sol-head"><div class="no">05</div><div><h4>收发有凭据，成品与原材双视角</h4><p>对应模块：采购/委外收货(2) · 采购/委外退货(2) · 客供收货 · 成品库存 · 成品/原材库存 · 成品入库单（含明细） · 流水统计 · 生产领料(4) · 成品变动出库(3)</p></div></div>
+    <div class="sol-body">
+      <div class="tri">
+        <div><h5>业务痛点</h5><p>账实长期不符，盘点要停线；成品仓与原材仓混在一起看，管理者分不清是「待发货」还是「待投产」；客户来料与自购料混堆，损耗扯不清。</p></div>
+        <div><h5>方案能力</h5><p>收货通道分流：采购收货 / 委外收货 / <b>客供收货</b>三线并行，退货同样分流管理；库存提供<b>成品与原材双视角</b>台账；成品入库单与明细分离，流水统计自动汇总；生产领料 4 项对接车间领用，成品变动出库 3 项管理成品仓发货动线。</p></div>
+        <div><h5>落地价值</h5><p>每一种物料流动都有对应单据与流水，账实差异可定位到具体单据而非「又丢了」；成品与原材分视角后，管理者能直接回答「有多少能发货、有多少能开工」。</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5.6 -->
+  <div class="anchor" id="sec5-6"></div>
+  <h3>5.6 质量管控</h3>
+  <div class="sol">
+    <div class="sol-head"><div class="no">06</div><div><h4>来料、制程、成品三道检验关口</h4><p>对应模块：质量管理(10) · 质检基础(3) · 采购/委外退货 · 生产工单返工</p></div></div>
+    <div class="sol-body">
+      <div class="tri">
+        <div><h5>业务痛点</h5><p>来料不检或只抽检，制程异常发现太晚；不良品处理随意，是退货还是返工没有结论；质量问题汇总时找不到批次与责任人。</p></div>
+        <div><h5>方案能力</h5><p>覆盖 <b>IQC 来料检验 / IPQC 制程检验 / FQC 成品检验</b> 的检验单据体系，配套质检基础数据（检验项目、标准）；检验结果<b>联动入库判定</b>——合格才允许入库，不良品走采购/委外退货或返工通道；委外收货即检验，外协品质同样纳入管控。</p></div>
+        <div><h5>落地价值</h5><p>不合格品不再「先进库再说」，质量关口前移；每个批次有检验记录，出现客诉时可反向追溯到具体检验环节；质检主管在角色权限内即可查看本部门全部检验数据。</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5.7 -->
+  <div class="anchor" id="sec5-7"></div>
+  <h3>5.7 委外加工与客供料</h3>
+  <div class="sol">
+    <div class="sol-head"><div class="no">07</div><div><h4>外协与来料加工，账、料、质同管</h4><p>对应模块：委外管理(12) · 委外订单 · 采购/委外收货 · 采购/委外退货 · 客供收货 · 成品变动出库</p></div></div>
+    <div class="sol-body">
+      <div class="tri">
+        <div><h5>业务痛点</h5><p>外协厂进度靠电话催，发出去多少料、收回来多少货对不上；来料加工业务里，客户提供的材料与我方自购料混账，损耗无法界定。</p></div>
+        <div><h5>方案能力</h5><p><b>委外管理 12 项</b>子功能覆盖委外订单下达与外协收退货全流程，并与仓库「采购/委外收货、采购/委外退货」通道打通，同普通采购分流；<b>客供收货</b>为来料加工（CMO）业务提供独立通道，客供料独立台账、独立出入库，与自购料互不混淆。</p></div>
+        <div><h5>落地价值</h5><p>外协物料有去有回、有单可查，发料与收货差异即时暴露；代工业务中客供料的损耗与结存清清楚楚，对账不再依赖供应商自报；委外品质纳入统一检验体系，不会成为质量管控的盲区。</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5.8 -->
+  <div class="anchor" id="sec5-8"></div>
+  <h3>5.8 成本与财务衔接</h3>
+  <div class="sol">
+    <div class="sol-head"><div class="no">08</div><div><h4>料、工、价三类数据在链路上自然沉淀</h4><p>对应模块：财务管理(2) · 产品 BOM · 供应商价格库 · 生产领料计划 · 车间报工</p></div></div>
+    <div class="sol-body">
+      <div class="tri">
+        <div><h5>业务痛点</h5><p>成本月底才结，还是靠财务事后拼凑；料工费摊不清，报价时不知道真实毛利；订单做完了才发现这个单子其实亏了。</p></div>
+        <div><h5>方案能力</h5><p>成本所需的三类原始数据在业务流程中<b>顺带产生</b>而非专门补录：<b>料</b>来自生产领料与 BOM、<b>工</b>来自车间报工的工序工时、<b>价</b>来自供应商价格库；财务管理模块承接业务单据形成核算出口。</p></div>
+        <div><h5>落地价值</h5><p>成本核算从「月底集中编表」转为「过程自动积累」，核算周期显著缩短；报价时能调取历史 BOM 与实际工时，报价不再拍脑袋；哪些订单赚钱、哪些订单只是热闹，有了判断依据。</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5.9 -->
+  <div class="anchor" id="sec5-9"></div>
+  <h3>5.9 集团多组织管控</h3>
+  <div class="sol">
+    <div class="sol-head"><div class="no">09</div><div><h4>一套平台，管多家公司与多个厂区</h4><p>对应模块：集团管理 · 部门与成员 · 角色管理 · 数据共享 · 数据总览 · 应用分配</p></div></div>
+    <div class="sol-body">
+      <div class="tri">
+        <div><h5>业务痛点</h5><p>集团下属工厂各上一套系统，口径不统一，集团要数据只能发 Excel 模板层层上报；各厂管理成熟度不同，强行统一系统反而拖垮先进厂。</p></div>
+        <div><h5>方案能力</h5><p>平台「集团管理」支持<b>集团本部 + 子公司</b>多组织模型；实测企业空间中已建立覆盖<b>生产、工程、品质、仓储、采购、业务、人力行政、财务、管理</b>的九个部门及配套角色；组织、角色、消息、AI 能力在集团层统一；<b>数据共享 + 数据总览</b>实现跨厂汇总；应用分配按企业空间计量，随开随用。</p></div>
+        <div><h5>落地价值</h5><p>集团层面统一账号、权限与审批流，各厂在统一底座上按自身成熟度选择起步版或全链路版；集团要数据不需层层上报，权限内直接查看汇总视图。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 06 细分行业 ================= -->
+<section id="sec6">
+  <div class="anchor" id="sec6"></div>
+  <span class="sec-no">CHAPTER 06</span>
+  <h2 class="sec-title">细分行业方案</h2>
+  <p class="sec-desc">同样一套底座，不同制造业态的落点不同。下表说明四类典型业态的选型侧重与关键配置。</p>
+
+  <div class="table-wrap">
+  <table>
+    <tr><th style="width:170px;">业态</th><th style="width:150px;">推荐应用</th><th style="width:26%;">核心诉求</th><th>关键配置重点</th></tr>
+    <tr>
+      <td><b>五金 / 塑胶 / 机加</b><br><span class="tag">多工序离散加工</span></td>
+      <td><span class="tag p">恺乐迪</span></td>
+      <td>工序多、工艺路线长，产能与工时是管理核心；模具与首件管理要求高</td>
+      <td>重点配置：四级工艺建模细化到小工序、车间报工按工序采集工时、生产情况与物控台账、按工艺路线派工</td>
+    </tr>
+    <tr>
+      <td><b>电子 / 电器装配</b><br><span class="tag">多层级 BOM</span></td>
+      <td><span class="tag p">恺乐迪</span></td>
+      <td>BOM 层级深、料号多，齐套与替代料管理复杂；来料品质直接决定良率</td>
+      <td>重点配置：多层级产品 BOM、评审(MRP 分析) 齐套运算、材料需求汇总、IQC 来料检验、ECN 变更单控制设计更改</td>
+    </tr>
+    <tr>
+      <td><b>来料加工 / 代工 CMO</b><br><span class="tag">客供料业务</span></td>
+      <td><span class="tag p">恺乐迪</span></td>
+      <td>客户提供材料，需严格区分客供与自购；加工费核算与损耗界定是关键</td>
+      <td>重点配置：客供收货独立通道、客供料独立库存台账、成品变动出库、加工工单与报工、委外管理（部分工序外协）</td>
+    </tr>
+    <tr>
+      <td><b>装备 / 非标定制</b><br><span class="tag">项目型生产</span></td>
+      <td><span class="tag">ERP 应用起步<br>→ 恺乐迪深化</span></td>
+      <td>单台价值高、项目周期长、设计变更频繁；先要能管住料与单</td>
+      <td>建议路径：起步版先跑通款号/BOM/ECN 与订单管理，验证后再切全链路版补 MRP 与车间报工；ECN 变更单是刚需</td>
+    </tr>
+  </table>
+  </div>
+
+  <div class="grid g2" style="margin-top:18px;">
+    <div class="pros">
+      <h4>✅ 适配良好的信号</h4>
+      <ul class="clean">
+        <li>按单生产（MTO）或以销定产，订单驱动的业务模式</li>
+        <li>有明确的生产、仓储、采购职能分工与责任岗位</li>
+        <li>存在多工序流转、委外加工或来料加工业务</li>
+        <li>已意识到 Excel 协同的瓶颈，管理层有推动意愿</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h4>⚠️ 需要额外评估的情形</h4>
+      <ul class="clean" style="--x:0;">
+        <li style="color:var(--ink-2);">连续型流程制造（化工、冶金等）——本方案工艺模型偏离散，需专项评估</li>
+        <li style="color:var(--ink-2);">需与既有 MES / WMS / 财务总账做深度双向集成——需确认接口方案与工作量</li>
+        <li style="color:var(--ink-2);">有严格行业合规审计要求（如医疗器械注册追溯）——需核实字段与留痕是否满足</li>
+        <li style="color:var(--ink-2);">完全无信息化基础且无专人负责——建议先补主数据，再启动系统</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 07 AI ================= -->
+<section id="sec7">
+  <div class="anchor" id="sec7"></div>
+  <span class="sec-no">CHAPTER 07</span>
+  <h2 class="sec-title">AI 赋能：让系统真正被用起来</h2>
+  <p class="sec-desc">制造业信息化最常见的失败不是功能不足，而是「上线了没人用」。AI 助手把交互门槛从「学会找菜单」降到「说一句话」。</p>
+
+  <div class="card">
+    <h4 style="margin-top:0;">💬 AI 助手交互示意</h4>
+    <p style="color:var(--ink-2);font-size:13.5px;">以下为基于平台 AI 助手实际能力（自然语言查数、口径主动澄清、工具调用可视化）构造的制造业场景示意，非真实会话截图：</p>
+    <div class="chat" style="margin:16px auto;">
+      <div class="msg user">
+        <div class="avatar">厂</div>
+        <div class="bubble">帮我看看这个月哪些生产工单还没完工</div>
+      </div>
+      <div class="msg bot">
+        <div class="avatar">★</div>
+        <div class="bubble">
+          好的，我先和您确认统计口径，避免取错数据：<br>
+          · <b>工单范围</b>：全部未完工工单，还是仅已下达 / 已开工的？<br>
+          · <b>时间依据</b>：按工单<b>下达日期</b>落在本月，还是<b>计划完工日期</b>在本月？<br>
+          · <b>进度口径</b>：报工数量未达工单数量的算未完工，还是包含「已完工未入库」？<br>
+          · <b>是否包含已暂停 / 已取消</b>的工单。<br>
+          您确认后我直接按该口径列出工单清单与各工序报工进度。
+          <div class="meta"><span>⚡ 主动澄清口径后再执行，避免误报</span><span>结果可「重新执行 / 引用到对话」</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g3" style="margin-top:16px;">
+      <div class="mod"><div class="ico" style="background:var(--primary-light);">💬</div><div><h4>自然语言查数</h4><p>「统计本月销售订单数量」「查一下某款号的库存」——管理者不必学报表工具，直接问。</p></div></div>
+      <div class="mod"><div class="ico" style="background:var(--accent-light);">🧠</div><div><h4>智能口径澄清</h4><p>不盲目执行，主动追问数据源、状态、时间范围与剔除规则，具备业务分析师式的严谨。</p></div></div>
+      <div class="mod"><div class="ico" style="background:var(--erp-light);">🔁</div><div><h4>结果可回溯</h4><p>每次回答显示执行耗时与 Token 消耗；工作流结果支持「重新执行 / 引用到对话 / 已读」。</p></div></div>
+    </div>
+  </div>
+
+  <h3>7.1 AI 在制造业的四类用法</h3>
+  <div class="grid g2">
+    <div class="card">
+      <h4 style="margin-top:0;">① 管理层问数</h4>
+      <p style="color:var(--ink-2);font-size:13.5px;">总经理不必等周报月报，直接问「本月订单交付率」「哪些工单逾期」。AI 澄清口径后返回结果，并保留往返记录，管理动作有据。</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0;">② 异常自动找人</h4>
+      <p style="color:var(--ink-2);font-size:13.5px;">单据触发的自动化流程（审核、发货、建仓）执行结果实时推送到 AI 面板；失败即时可见并可一键重试，不必等下游发现「怎么还没审」。</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0;">③ 低门槛建表 / 识单</h4>
+      <p style="color:var(--ink-2);font-size:13.5px;">支持「说要查什么、建哪张表，或粘贴表单截图」——把纸质流转单、客户 Excel 模板拍张照就能转成系统表格，是历史数据入场与临时需求的高效通道。</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0;">④ 制度与工艺问答</h4>
+      <p style="color:var(--ink-2);font-size:13.5px;">企业知识库支撑 RAG 问答：作业指导书、检验标准、报销制度入库后，一线用自然语言提问即可获得答案，降低培训与传帮带成本。</p>
+    </div>
+  </div>
+
+  <div class="note info">
+    <b>成本可控：</b>AI 能力按 <b>Token 计量计费</b>，用量概览与 Token 使用情况在智能体中心透明可查（测试环境实测显示剩余额度为 19M 量级）。企业可设任务计划定时执行常规统计，也可切换底层模型配置以匹配成本与效果要求。
+  </div>
+</section>
+
+<!-- ================= 08 实施路线 ================= -->
+<section id="sec8">
+  <div class="anchor" id="sec8"></div>
+  <span class="sec-no">CHAPTER 08</span>
+  <h2 class="sec-title">实施路线图</h2>
+  <p class="sec-desc">制造业 ERP 失败的根本原因通常不是软件，而是「一次上太多、主数据没理清、一线不接受」。本方案按三阶段推进，每阶段都有可验收的交付物。</p>
+
+  <div class="grid g3">
+    <div class="phase">
+      <div class="ph-top">
+        <span class="ptag">PHASE 1</span>
+        <h4>试点上线 · 打地基</h4>
+        <div class="dur">建议周期：1—2 个月（视主数据存量）</div>
+      </div>
+      <div class="ph-body">
+        <ul class="clean arrow">
+          <li>组织与账号：集团/部门/成员/角色一次性建准</li>
+          <li>主数据：款号物料、BOM、供应商、客户、仓库</li>
+          <li>启用应用：先启用起步版跑通基础台账</li>
+          <li>跑通闭环：销售订单 → 采购订单 → 收发货 → 库存</li>
+          <li>配工作流：审核类自动化先行（订单/采购/物料）</li>
+        </ul>
+        <div class="out"><b>阶段验收：</b>一张订单从录入到发货全流程在系统内跑通，且单据可查、状态可见。</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="ph-top">
+        <span class="ptag" style="background:var(--kld-light);color:#a21caf;">PHASE 2</span>
+        <h4>深化贯通 · 进车间</h4>
+        <div class="dur">建议周期：2—3 个月</div>
+      </div>
+      <div class="ph-body">
+        <ul class="clean arrow">
+          <li>切换/并行全链路版：补齐 MRP 与请购转采购</li>
+          <li>工艺建模：工序 → 工艺路线 → 小工序</li>
+          <li>生产执行：工单派工、领料计划、车间报工上线</li>
+          <li>质量与委外：IQC/IPQC/FQC 检验，委外收退货</li>
+          <li>现场培训：手机 APP 报工与收发货实操演练</li>
+        </ul>
+        <div class="out"><b>阶段验收：</b>车间按工序报工，管理层可实时查看工单进度；MRP 在接单阶段实际参与齐套判断。</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="ph-top">
+        <span class="ptag" style="background:var(--accent-light);color:#0f766e;">PHASE 3</span>
+        <h4>智能升级 · 见效益</h4>
+        <div class="dur">建议周期：持续演进</div>
+      </div>
+      <div class="ph-body">
+        <ul class="clean arrow">
+          <li>AI 应用：管理层问数、任务计划定时统计</li>
+          <li>知识库：作业指导书、检验标准、制度入库</li>
+          <li>核算衔接：成本数据归集，报价参考库建成</li>
+          <li>集团扩展：数据共享与数据总览做多厂汇总</li>
+          <li>持续裁剪：清理测试项、按业务变化调整菜单</li>
+        </ul>
+        <div class="out"><b>阶段验收：</b>管理者用自然语言即可取得经营数据；成本核算周期缩短，报价有历史依据。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px;">
+    <h4 style="margin-top:0;">🔑 四个关键成功要素</h4>
+    <div class="grid g4">
+      <div class="kpi"><div class="lab" style="font-weight:700;">① 主数据先行</div><div class="sub">物料与 BOM 不准，后面所有环节都在算错数。宁可多花两周理料，不要带着错的料跑流程。</div></div>
+      <div class="kpi"><div class="lab" style="font-weight:700;">② 有人担责</div><div class="sub">每个环节指定数据责任人（谁是物料责任人、谁是报工审核人），系统才有可信度。</div></div>
+      <div class="kpi"><div class="lab" style="font-weight:700;">③ 先窄后宽</div><div class="sub">先跑通一条主线闭环，再横向铺开。不要一次性把所有模块都打开给所有人。</div></div>
+      <div class="kpi"><div class="lab" style="font-weight:700;">④ 流程随业务走</div><div class="sub">平台低代码特性应被用起来：业务变了当天改流程，而不是攒需求排期到下个版本。</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 09 选型 ================= -->
+<section id="sec9">
+  <div class="anchor" id="sec9"></div>
+  <span class="sec-no">CHAPTER 09</span>
+  <h2 class="sec-title">选型与配置建议</h2>
+  <p class="sec-desc">同一平台、同一账号体系下的两套 ERP 实例，按下表逐项对比选型。对比依据为产品实测模块清单。</p>
+
+  <div class="table-wrap">
+  <table>
+    <tr><th style="width:210px;">能力项</th><th>ERP 应用（erp应用）</th><th>恺乐迪（kai-le-di）</th></tr>
+    <tr><td><b>定位</b></td><td>起步版制造 ERP / 标准模板</td><td>全链路制造 ERP / 主力生产系统</td></tr>
+    <tr><td><b>产品主数据（PML）</b></td><td class="compare-yes">✔ 款号 / BOM / ECN / 工艺</td><td class="compare-yes">✔ 同源，参数设置 5 项 / 工艺维护 4 项</td></tr>
+    <tr><td><b>销售与接单</b></td><td class="compare-yes">✔ 报价 / 订单 / 发货 / 退货</td><td class="compare-yes">✔ 更完整，含送货管理 3 项</td></tr>
+    <tr><td><b>客户管理</b></td><td class="compare-no">— 无独立客户模块</td><td class="compare-yes">✔ 客户列表 + 联系人</td></tr>
+    <tr><td><b>MRP 物料分析</b></td><td class="compare-no">— 生产计划 17 项不含 MRP 评审</td><td class="compare-yes">✔ 评审(MRP 分析) + 需求明细 / 汇总</td></tr>
+    <tr><td><b>请购流程</b></td><td class="compare-no">— 采购直接下单</td><td class="compare-yes">✔ 请购单 → 请购转采购 → 请购汇总表</td></tr>
+    <tr><td><b>供应商价格库</b></td><td class="compare-no">—</td><td class="compare-yes">✔ 采购价格明细 + 采购报价记录</td></tr>
+    <tr><td><b>客供料收货</b></td><td class="compare-no">—</td><td class="compare-yes">✔ 客供收货（来料加工）</td></tr>
+    <tr><td><b>车间报工</b></td><td class="compare-no">— 车间管理内嵌</td><td class="compare-yes">✔ 独立车间报工 4 项 + 作业员管理</td></tr>
+    <tr><td><b>财务管理</b></td><td class="compare-no">—</td><td class="compare-yes">✔ 财务管理 2 项</td></tr>
+    <tr><td><b>质量 / 委外</b></td><td class="compare-yes">✔ 质量管理 10 + 委外 12</td><td class="compare-yes">✔ 同级深度</td></tr>
+    <tr><td><b>工作流引擎</b></td><td class="compare-yes">✔ 审核 / 发货 / 建仓自动化</td><td class="compare-yes">✔ 同引擎，业务节点更多</td></tr>
+    <tr><td><b>平台能力（组织 / 权限 / AI / 消息）</b></td><td class="compare-yes">✔ 共享星辰塔平台</td><td class="compare-yes">✔ 共享星辰塔平台</td></tr>
+    <tr><td><b>实施期辅助页</b></td><td class="compare-yes">✔ 含测试管理 / 统计页 / 测试文档</td><td class="compare-no">— 更贴近生产形态（正式环境建议统一裁剪）</td></tr>
+  </table>
+  </div>
+
+  <h3>9.1 按企业成熟度推荐配置</h3>
+  <div class="table-wrap">
+  <table>
+    <tr><th style="width:190px;">企业画像</th><th style="width:150px;">推荐配置</th><th>理由与推进要点</th></tr>
+    <tr>
+      <td><b>首次信息化</b><br>无系统，全 Excel；有专人但无 IT 团队</td>
+      <td><span class="tag o">起步版先行</span></td>
+      <td>先启用 ERP 应用，把订单、库存、款号 BOM 三条线跑起来。目标不是功能全，而是<b>让数据集中、让流程有单据</b>。磨合 2—3 个月后再评估是否切全链路版。</td>
+    </tr>
+    <tr>
+      <td><b>有基础 ERP，但用不起来</b><br>功能买了，一线不录或录不全</td>
+      <td><span class="tag p">全链路版 + AI 入口</span></td>
+      <td>重点不在补功能，而在<b>降低使用门槛</b>：用手机 APP 承接车间报工与收发货，用 AI 助手承接管理层问数。同时清理冗余菜单，减少一线选择成本。</td>
+    </tr>
+    <tr>
+      <td><b>接单制造、交期压力大</b><br>停工待料频发，齐套靠人算</td>
+      <td><span class="tag p">全链路版（MRP 优先）</span></td>
+      <td>优先上线「评审(MRP 分析) + 物料需求汇总 + 请购转采购」这一段，只要齐套判断准了，交期与停工问题就能明显缓解，其余模块随后铺开。</td>
+    </tr>
+    <tr>
+      <td><b>来料加工 / 代工</b><br>客供料与自购料混管</td>
+      <td><span class="tag p">全链路版（客供优先）</span></td>
+      <td>优先配置客供收货通道与独立库存台账，先把「客户的料」和「自己的料」分开。这是代工业务最容易出纠纷的地方，先管住它收益最直接。</td>
+    </tr>
+    <tr>
+      <td><b>集团 / 多厂区</b><br>各厂成熟度不一</td>
+      <td><span class="tag t">混合部署 + 数据共享</span></td>
+      <td>成熟度低的厂先用起步版，成熟度高的厂直接上全链路版，集团层通过数据共享与数据总览做汇总。<b>不强求各厂同版本同进度</b>，避免成熟厂被拖慢。</td>
+    </tr>
+  </table>
+  </div>
+</section>
+
+<!-- ================= 10 价值 ================= -->
+<section id="sec10">
+  <div class="anchor" id="sec10"></div>
+  <span class="sec-no">CHAPTER 10</span>
+  <h2 class="sec-title">价值与收益</h2>
+  <p class="sec-desc">先说清楚口径：本章区分「可验证的既成事实」与「项目目标 / 行业参考区间」，后者不构成效果承诺。</p>
+
+  <h3>10.1 方案已具备的客观能力（依据实测）</h3>
+  <div class="grid g4">
+    <div class="kpi"><div class="num">12</div><div class="lab">全链路环节单据化</div><div class="sub">报价至财务核算，无口头传递断点</div></div>
+    <div class="kpi"><div class="num">2</div><div class="lab">可开箱启用的 ERP 实例</div><div class="sub">起步版 + 全链路版，随时切换</div></div>
+    <div class="kpi"><div class="num">3</div><div class="lab">工作流触发时机类型</div><div class="sub">新增 / 修改 / 前置完成，构事件驱动引擎</div></div>
+    <div class="kpi"><div class="num">7</div><div class="lab">物料分类视图</div><div class="sub">成品/配件/半成品/原材/包材/耗材/辅材</div></div>
+    <div class="kpi"><div class="num">4</div><div class="lab">组织层级模型</div><div class="sub">集团 / 部门 / 成员 / 角色，权限隔离</div></div>
+    <div class="kpi"><div class="num">4</div><div class="lab">终端形态</div><div class="sub">网页 / PC 客户端 / 手机 APP / 企业微信</div></div>
+    <div class="kpi"><div class="num">200</div><div class="lab">表格单页承载条数</div><div class="sub">实测物料台账 5000+ 条分页流畅</div></div>
+    <div class="kpi"><div class="num">4</div><div class="lab">工艺建模层级</div><div class="sub">工序→工艺路线→工序列表→小工序</div></div>
+  </div>
+
+  <h3>10.2 改善方向与参考目标</h3>
+  <div class="note">
+    <b>重要说明：</b>下表数值为<b>行业经验参考区间与项目目标</b>，用于设定项目基线，<b>不是产品实测结果，也不构成对实施效果的承诺</b>。实际达成情况取决于企业主数据完备度、现场执行力度、实施范围与管理推动强度，需在项目启动时与企业共同设定可验收的量化基线。
+  </div>
+  <div class="table-wrap">
+  <table>
+    <tr><th style="width:170px;">改善方向</th><th style="width:24%;">改善前的典型状态</th><th style="width:26%;">改善后的目标状态</th><th>衡量指标（建议由双方在启动期共同校准）</th></tr>
+    <tr><td><b>单据流转效率</b></td><td>靠电话微信人工通知，漏单需事后发现</td><td>触发性工作流自动送审与流转</td><td>单据平均流转时长、漏单率</td></tr>
+    <tr><td><b>齐套与停工</b></td><td>开工后才发现缺料，停工待料频发</td><td>接单阶段完成 MRP 齐套判断</td><td>停工待料次数 / 时长、齐套准确率</td></tr>
+    <tr><td><b>生产透明度</b></td><td>班后口头汇报，进度滞后一天以上</td><td>工序级报工，进度实时可见</td><td>工单进度数据时效、异常响应时长</td></tr>
+    <tr><td><b>库存准确性</b></td><td>账实长期不符，月度盘点差异大</td><td>出入库全留单据与流水</td><td>库存准确率、盘点差异率</td></tr>
+    <tr><td><b>质量闭环</b></td><td>不良品去向无记录，客诉难追溯</td><td>检验联动入库判定，批次可溯</td><td>批次追溯覆盖率、不良品处理闭环率</td></tr>
+    <tr><td><b>数据获取效率</b></td><td>要数需等报表或发模板收集</td><td>AI 自然语言即时问数</td><td>常规数据获取耗时、报表等待周期</td></tr>
+    <tr><td><b>系统维护成本</b></td><td>需求变更须排期二开</td><td>低代码自行调整，当天可上线</td><td>变更响应周期、年度二开费用</td></tr>
+  </table>
+  </div>
+
+  <h3>10.3 三类角色的收益视角</h3>
+  <div class="grid g3">
+    <div class="scene">
+      <h4>👔 企业主 / 总经理</h4>
+      <ul class="clean arrow">
+        <li>经营数据随时问，不再等月报</li>
+        <li>成本来源可追，报价有历史依据</li>
+        <li>系统可自行演进，不必反复支付二开费用</li>
+      </ul>
+    </div>
+    <div class="scene">
+      <h4>🏭 生产 / 品质 / 仓储负责人</h4>
+      <ul class="clean arrow">
+        <li>工单进度与报工数据实时可见</li>
+        <li>收发有单据，账实差异可定位</li>
+        <li>检验关联入库，不良品不再偷偷流下去</li>
+      </ul>
+    </div>
+    <div class="scene">
+      <h4>💻 IT / 信息部</h4>
+      <ul class="clean arrow">
+        <li>无重实施负担，平台侧统一运维</li>
+        <li>组织权限与账号统一，减少管理成本</li>
+        <li>应用访问日志可审计，满足合规留痕</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 11 服务保障 ================= -->
+<section id="sec11">
+  <div class="anchor" id="sec11"></div>
+  <span class="sec-no">CHAPTER 11</span>
+  <h2 class="sec-title">服务与保障</h2>
+  <p class="sec-desc">平台侧提供的运营支撑能力，构成项目落地后的持续运行保障。</p>
+
+  <div class="grid g2">
+    <div class="card">
+      <h4 style="margin-top:0;">🛠 实施与迁移支撑</h4>
+      <ul class="clean">
+        <li><b>数据迁移工具</b>：历史系统数据入场通道，降低切换成本</li>
+        <li><b>应用导入 / 导出</b>：模板化分发，多厂复制同一套配置</li>
+        <li><b>应用编辑与预览</b>：配置改动可先预览再发布，降低试错风险</li>
+        <li><b>菜单拖拽嵌套分组</b>：按企业实际业务重组菜单结构</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0;">📞 运行与支持保障</h4>
+      <ul class="clean">
+        <li><b>工单中心</b>：内置客服工单体系，问题响应与闭环可追踪</li>
+        <li><b>版本升级推送</b>：平台统一推送升级，企业无需自建运维</li>
+        <li><b>文档 &amp; 教程</b>：内置帮助文档，降低一线学习成本</li>
+        <li><b>培训与上手</b>：结合下载中心的 PC 端与手机 APP，分角色实操培训</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <h4 style="margin-top:0;">🛡 运维可观测性</h4>
+    <div class="grid g4">
+      <div class="kpi"><div class="lab" style="font-weight:700;">应用活跃数据</div><div class="sub">度量各应用使用热度，识别「上线了没人用」的模块</div></div>
+      <div class="kpi"><div class="lab" style="font-weight:700;">应用访问日志</div><div class="sub">谁、何时、访问了什么，满足审计与合规要求</div></div>
+      <div class="kpi"><div class="lab" style="font-weight:700;">Token 用量看板</div><div class="sub">AI 成本透明计量，可按用量管理额度</div></div>
+      <div class="kpi"><div class="lab" style="font-weight:700;">消息与审批中心</div><div class="sub">待办统一入口，流程不落地、责任不悬空</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 12 附录 ================= -->
+<section id="sec12">
+  <div class="anchor" id="sec12"></div>
+  <span class="sec-no">CHAPTER 12</span>
+  <h2 class="sec-title">附录</h2>
+
+  <h3>附录 A · 方案能力速查</h3>
+  <div class="table-wrap">
+  <table>
+    <tr><th style="width:150px;">业务环节</th><th>主要模块（实测存在）</th><th style="width:110px;">推荐应用</th></tr>
+    <tr><td>产品主数据</td><td>款号/新增、款号/物料、文档版本、产品BOM、ECN变更、ECN变更单、工程基础、参数设置、工艺维护（工序/工艺路线/工序列表/小工序）</td><td>两者均具备</td></tr>
+    <tr><td>销售接单</td><td>销售订单、销售单明细、订单异常处理单、送货管理、销售发货单（含明细）、出货标签、报价管理、退货管理、客户/联系人</td><td>恺乐迪更完整</td></tr>
+    <tr><td>计划与物料</td><td>生产评审(MRP分析)、物料需求明细/汇总、生产工单、生产领料计划、生产情况、生产计划与物控、生产打印</td><td>恺乐迪</td></tr>
+    <tr><td>采购供应</td><td>采购需求（成品/材料）、材料需求明细/汇总、请购单（含明细）、请购转采购、请购汇总表、供应商、价格管理（采购价格明细/采购报价记录）、采购订单</td><td>恺乐迪更完整</td></tr>
+    <tr><td>生产执行</td><td>车间管理（19 项）、车间报工（4 项）、部门/作业员、生产情况</td><td>两者均具备<br>（报工仅恺乐迪）</td></tr>
+    <tr><td>仓储物流</td><td>采购/委外收货、采购/委外退货、客供收货、成品库存、成品/原材库存、成品入库单（含明细）、流水统计、生产领料、成品变动出库</td><td>恺乐迪更完整</td></tr>
+    <tr><td>质量管理</td><td>质检基础（3）、质量管理（10）、检验联动入库与退货返工</td><td>两者均具备</td></tr>
+    <tr><td>委外加工</td><td>委外订单、委外收货、委外退货（共 12 项）</td><td>两者均具备</td></tr>
+    <tr><td>财务核算</td><td>财务管理（2）</td><td>恺乐迪</td></tr>
+    <tr><td>组织与协同</td><td>集团管理、部门与成员、角色管理、任务管理、消息中心、审批中心</td><td>平台能力</td></tr>
+    <tr><td>AI 与数据</td><td>AI 助手、模型配置、任务计划、企业知识库、消息广播、用量概览、Token 使用情况、数据总览、数据共享、跟踪使用情况</td><td>平台能力</td></tr>
+  </table>
+  </div>
+
+  <h3>附录 B · 术语表</h3>
+  <div class="table-wrap">
+  <table>
+    <tr><th style="width:150px;">术语</th><th>含义</th></tr>
+    <tr><td>PML</td><td>Product Material List，产品物料主数据模块（款号、BOM、工艺、ECN）</td></tr>
+    <tr><td>款号</td><td>制造企业对产品 / 物料的业务编号体系（实测 bh 系列编号）</td></tr>
+    <tr><td>ECN</td><td>Engineering Change Notice，工程变更通知，产品变更的版本管理单据</td></tr>
+    <tr><td>MRP</td><td>Material Requirements Planning，物料需求计划，按订单 + BOM 计算净需求</td></tr>
+    <tr><td>MTO</td><td>Make To Order，按单生产 / 接单制造</td></tr>
+    <tr><td>请购</td><td>需求部门提出的采购申请，审核后转正式采购订单</td></tr>
+    <tr><td>客供料</td><td>客户提供材料、我方加工的业务模式（CMO / 来料加工）</td></tr>
+    <tr><td>委外</td><td>将部分工序外包给供应商加工的业务模式</td></tr>
+    <tr><td>报工</td><td>车间按工序上报产量与工时的作业行为</td></tr>
+    <tr><td>IQC / IPQC / FQC</td><td>来料检验 / 制程检验 / 成品检验</td></tr>
+    <tr><td>齐套</td><td>生产某工单所需物料是否全部到位的状态判断</td></tr>
+    <tr><td>预提交</td><td>表格中先占位新增空白记录、再补数据的录入模式</td></tr>
+    <tr><td>Token</td><td>大模型调用计量单位，平台按用量管理 AI 额度</td></tr>
+  </table>
+  </div>
+
+  <h3>附录 C · 内容来源与免责说明</h3>
+  <div class="card">
+    <ul class="clean arrow">
+      <li><b>能力描述来源：</b>本方案的模块清单、单据编号、工作流名称、组织与角色设置、界面交互能力等内容，取自《星辰塔 ERP 凯乐迪产品手册》所记录的产品实测遍历结果，用于说明系统<b>实际具备的能力边界</b>。</li>
+      <li><b>收益口径：</b>第 10 章 10.2、10.3 节中的改善方向与目标状态为方案设计目标，<b>非实测结果，不构成效果承诺</b>；量化指标的基线与目标值建议在项目启动时由双方共同校准并写入验收标准。</li>
+      <li><b>适配边界：</b>本方案以离散制造为主要适配对象。连续型流程制造、需与既有 MES / WMS / 财务系统深度双向集成、或有严格行业合规审计要求的场景，需专项评估后确定可行性。</li>
+      <li><b>图示说明：</b>文中流程图与对比条形为方案表达用示意，条形长度为相对能力示意而非量化测评分数；AI 对话内容为基于平台能力的场景示意，非真实会话截图。</li>
+      <li><b>版本：</b>V1.0 · 2026-10。方案将随产品版本迭代更新。</li>
+    </ul>
+  </div>
+
+  <div class="foot">
+    <span>© 2026 星辰塔 · 制造业数字化解决方案 V1.0</span>
+    <span>编制依据：《星辰塔 ERP 凯乐迪产品手册》· 编制日期 2026-10</span>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+// 目录滚动高亮
+(function(){
+  const links = document.querySelectorAll('.toc a');
+  const map = {};
+  links.forEach(a=>{ map[a.getAttribute('href').slice(1)] = a; });
+  const sections = [...document.querySelectorAll('.anchor, section[id]')];
+  function onScroll(){
+    let current = '';
+    const y = window.scrollY + 120;
+    for(const s of sections){
+      if(s.getBoundingClientRect().top + window.scrollY <= y) current = s.id;
+    }
+    links.forEach(a=>a.classList.remove('active'));
+    if(current && map[current]) map[current].classList.add('active');
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+</script>
+</body>
+</html>
